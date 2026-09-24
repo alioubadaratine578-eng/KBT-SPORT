@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBT SPORT - Réservation en ligne</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="splash.css">
+</head>
+<body>
+
+<!-- ⭐ ÉCRAN D'ACCUEIL ANIMÉ -->
+<div id="splash-screen">
+    <div class="splash-content">
+        <div class="splash-logo-wrapper">
+            <div class="splash-ring"></div>
+            <div class="splash-ring-2"></div>
+            <img src="logo.jpeg" alt="KBT SPORT" class="splash-logo">
+        </div>
+        <h1 class="splash-title">KBT SPORT</h1>
+        <p class="splash-subtitle">Karang Poste</p>
+        <div class="splash-bar">
+            <div class="splash-bar-fill"></div>
+        </div>
+        <p class="splash-loading-text">Chargement</p>
+    </div>
+    <div class="splash-bottom-bar"></div>
+</div>
+
+<div class="container">
+    <img src="logo.jpeg" alt="Logo KBT SPORT" class="brand-logo" style="margin-top: 10px;">
+    <h1>KBT SPORT</h1>
+    <p class="description">Réservez votre terrain de football en ligne facilement et rapidement !</p>
+
+    <div class="stats-row">
+        <div class="stat-item">
+            <span class="stat-number" data-target="500">0</span>+
+            <p>Matchs réservés</p>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number" data-target="120">0</span>+
+            <p>Clients fidèles</p>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number" data-target="98">0</span>%
+            <p>Satisfaction</p>
+        </div>
+    </div>
+
+    <div class="rules-section">
+        <button type="button" class="rules-toggle" onclick="toggleRules()">
+            <span>📋 Règlement intérieur KBT SPORT</span>
+            <span id="rules-arrow">▼</span>
+        </button>
+        <div id="rules-content" class="rules-content">
+            <p class="rules-subtitle">Karang Poste</p>
+            <p>Chers clients, merci de prendre connaissance et de respecter les règles suivantes :</p>
+            <h3>1. Réservations et Paiements</h3>
+            <ul>
+                <li><strong>Réservation en ligne :</strong> Tous les créneaux doivent être réservés à l'avance.</li>
+                <li><strong>Modalités :</strong> Paiements via Wave ou Orange Money.</li>
+                <li><strong>Acompte :</strong> Un acompte de 50% est obligatoire pour bloquer le créneau.</li>
+                <li><strong>Annulation :</strong> <span class="danger-highlight">Acompte non remboursable en cas d'absence.</span></li>
+            </ul>
+            <h3>2. Horaires</h3>
+            <ul>
+                <li><strong>Créneaux :</strong> 07h00 à 12h15 et 16h00 à 03h15.</li>
+                <li>Merci de vous présenter 10 minutes avant le match.</li>
+            </ul>
+            <h3>3. Comportement</h3>
+            <ul>
+                <li><strong>Crampons vissés interdits.</strong></li>
+                <li>Fair-play obligatoire.</li>
+            </ul>
+            <p class="rules-footer">L'équipe KBT SPORT vous souhaite un excellent match ! ⚽</p>
+        </div>
+    </div>
+
+    <img src="grand terrain.jpeg" alt="Terrain KBT SPORT" class="terrain-preview">
+
+    <form id="reservation-form">
+        <div class="form-group">
+            <label>Nom complet :</label>
+            <input type="text" id="full-name" required placeholder="Votre nom complet">
+        </div>
+        <div class="form-group">
+            <label>Numéro WhatsApp :</label>
+            <input type="tel" id="whatsapp-number" required placeholder="Ex: 7XXXXXXXX">
+        </div>
+        <div class="form-group">
+            <label>Date du match :</label>
+            <input type="date" id="date-match" required>
+        </div>
+        <div class="form-group">
+            <label>Équipe A :</label>
+            <input type="text" id="equipe-a" required placeholder="Nom équipe A">
+        </div>
+        <div class="form-group">
+            <label>Équipe B :</label>
+            <input type="text" id="equipe-b" required placeholder="Nom équipe B">
+        </div>
+        <div class="form-group">
+            <label>Terrain & Durée :</label>
+            <select id="tarif-select" onchange="calculerPrix()">
+                <option value="30000">Terrain complet - 30.000 FCFA</option>
+                <option value="15000">Demi-terrain - 15.000 FCFA</option>
+            </select>
+            <select id="duree" onchange="calculerPrix()" style="margin-top: 10px;">
+                <option value="1">1 heure</option>
+                <option value="2">2 heures</option>
+            </select>
+        </div>
+
+        <div class="payment-notice">
+            <h3>💳 Acompte obligatoire</h3>
+            <p>Pour bloquer votre créneau, versez un acompte de <strong>50%</strong> : <span id="deposit-amount">15.000 FCFA</span></p>
+            <p class="payment-warning">⚠️ Sans paiement, le créneau ne sera pas réservé.</p>
+        </div>
+
+        <div class="form-group">
+            <label>Mode de paiement :</label>
+            <select id="methode-paiement" required>
+                <option value="wave">Wave 🌊 (Karang Business Tine & Frère)</option>
+                <option value="orange-money">Orange Money 🟠</option>
+            </select>
+        </div>
+
+        <label>Disponibilité des créneaux :</label>
+
+        <div class="slots-legend">
+            <span><span class="color-dot available"></span> Disponible</span>
+            <span><span class="color-dot pending"></span> En attente</span>
+            <span><span class="color-dot booked"></span> Réservé</span>
+            <span><span class="color-dot blocked"></span> Bloqué</span>
+        </div>
+
+        <div id="blocked-info" style="display: none; background-color: #fff3cd; color: #856404; padding: 10px 15px; border-radius: 8px; margin: 10px 0 15px 0; font-weight: bold; text-align: center; border-left: 5px solid #dc3545; font-size: 14px;">
+            ⚠️ Les samedis 05, 12, 19 et 26 septembre 2026 de 22h à 23h sont réservés par la Location douanier.
+        </div>
+
+        <div class="slots-counter">
+            <span id="slots-count">0</span> créneaux disponibles pour cette date
+        </div>
+
+        <div class="slots-grid" id="slots-container"></div>
+
+        <div class="summary-box">
+            <h3>Total à payer</h3>
+            <p id="total-price">30.000 FCFA</p>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn-attract ripple">Valider la réservation & Payer l'acompte 💳</button>
+    </form>
+
+    <hr class="separator">
+
+    <div class="chat-global-container">
+        <h2>Espace Discussion KBT SPORT ⚽</h2>
+        <div id="comments-container" class="comments-stream"></div>
+        <div class="comment-form">
+            <div class="form-group" style="margin-bottom: 10px;">
+                <input type="text" id="comment-pseudo" placeholder="Votre pseudo" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #444; color: #fff; border-radius: 5px;">
+            </div>
+            <textarea id="comment-text" placeholder="Ajoute un message..." required></textarea>
+            <button type="button" id="comment-submit-btn" class="ripple" onclick="ajouterCommentaire()">Envoyer 🚀</button>
+        </div>
+    </div>
+
+    <hr class="separator">
+
+    <button id="btn-ouvrir-admin" class="btn-secondary ripple">Espace Administration</button>
+
+    <div class="admin-panel" id="admin-panel-zone" style="display: none;">
+        <h2>Gestion des réservations</h2>
+
+        <div id="admin-pending-container" style="margin-bottom: 20px;">
+            <h3 style="color: var(--primary-color); margin-bottom: 12px;">⏳ Réservations à valider</h3>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom / Paiement</th>
+                        <th>Créneau</th>
+                        <th>Action</th>
+                        <th>Équipe A</th>
+                        <th>Équipe B</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ⭐ FOOTER KBT SPORT -->
+    <footer class="kbt-footer">
+        <div class="footer-top">
+            <!-- Colonne 1 : Identité -->
+            <div class="footer-col">
+                <img src="logo.jpeg" alt="KBT SPORT" class="footer-logo">
+                <h3>⚽ KBT SPORT</h3>
+                <p>Réservez votre terrain de football en ligne facilement et rapidement.</p>
+                <p class="footer-flag">🇸🇳 Karang Poste</p>
+            </div>
+
+            <!-- Colonne 2 : Navigation -->
+            <div class="footer-col">
+                <h4>🔗 Navigation</h4>
+                <ul>
+                    <li><a href="#reservation-form">📅 Réserver un créneau</a></li>
+                    <li><a href="#slots-container">🕐 Voir les créneaux</a></li>
+                    <li><a href="javascript:void(0)" onclick="toggleRules(); document.getElementById('rules-content').classList.add('open');">📋 Règlement intérieur</a></li>
+                    <li><a href="javascript:void(0)" onclick="document.getElementById('comments-container').scrollIntoView({behavior:'smooth'})">💬 Espace discussion</a></li>
+                </ul>
+            </div>
+
+            <!-- Colonne 3 : Contact -->
+            <div class="footer-col">
+                <h4>📞 Contact</h4>
+                <ul>
+                    <li>
+                        <a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">
+                            💬 WhatsApp : 75 641 80 77
+                        </a>
+                    </li>
+                    <li>
+                        <a href="tel:+221756418077">
+                            📱 Appeler : 75 641 80 77
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.google.com/maps/search/Karang+Poste" target="_blank" rel="noopener noreferrer">
+                            📍 Karang Poste, Sénégal
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Colonne 4 : Paiements -->
+            <div class="footer-col">
+                <h4>💳 Paiements acceptés</h4>
+                <div class="payment-badges">
+                    <span class="pay-badge">🌊 Wave</span>
+                    <span class="pay-badge">🟠 Orange Money</span>
+                </div>
+                <p class="footer-info">Titulaire : <strong>Karang Business Tine & Frère</strong></p>
+                <p class="footer-info">Acompte 50% obligatoire pour bloquer votre créneau.</p>
+            </div>
+        </div>
+
+        <!-- ⭐ CARTE DÉVELOPPEUR -->
+        <div class="footer-dev-card">
+            <div class="dev-avatar">💻</div>
+            <div class="dev-info">
+                <p class="dev-role">👨‍💻 Développé par</p>
+                <p class="dev-name">Génie Logiciel</p>
+                <p class="dev-contact">
+                    <a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">
+                        📞 75 641 80 77
+                    </a>
+                    <span class="dev-sep">•</span>
+                    <a href="https://www.google.com/maps/search/Karang+Poste" target="_blank" rel="noopener noreferrer">
+                        📍 Karang Poste
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Horaires -->
+        <div class="footer-hours">
+            <h4>🕐 Horaires d'ouverture</h4>
+            <div class="hours-grid">
+                <div class="hour-item">
+                    <span class="hour-icon">🌅</span>
+                    <span class="hour-label">Matin</span>
+                    <span class="hour-value">07h00 — 12h15</span>
+                </div>
+                <div class="hour-item">
+                    <span class="hour-icon">☀️</span>
+                    <span class="hour-label">Après-midi</span>
+                    <span class="hour-value">16h00 — 03h15</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom -->
+        <div class="footer-bottom">
+            <p>© <span id="footer-year"></span> <strong>KBT SPORT</strong> — Tous droits réservés.</p>
+            <p class="footer-credit">Fait avec ❤️ au Sénégal 🇸🇳</p>
+        </div>
+    </footer>
+</div>
+
+<div id="toast-container"></div>
+
+<div id="loader" class="loader hidden">
+    <div class="loader-content">
+        <div class="loader-spinner"></div>
+        <p id="loader-text">Traitement en cours...</p>
+    </div>
+</div>
+
+<!-- MODALE DE PAIEMENT -->
+<div id="payment-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #1A1A1A; border: 2px solid var(--primary-color); border-radius: 16px; max-width: 450px; width: 100%; padding: 30px; text-align: center;">
+        <h2 style="color: var(--primary-color); margin-bottom: 15px;">💳 Paiement de l'acompte</h2>
+        <p style="color: #E2E8F0; margin-bottom: 20px;">
+            Envoyez <strong style="color: var(--primary-color); font-size: 1.3rem;" id="modal-montant">15.000 FCFA</strong><br>
+            à <strong>Karang Business Tine & Frère</strong>
+        </p>
+
+        <!-- ÉTAPE 1 : Payer maintenant -->
+        <div id="modal-step-1">
+            <div style="background: #0D0D0D; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                <p style="color: #A0AEC0; font-size: 0.9rem; margin-bottom: 10px;">Cliquez sur le bouton ci-dessous pour payer :</p>
+                <button class="btn-attract ripple" onclick="ouvrirPaiement()" style="display: inline-block; background: linear-gradient(135deg, #FFCC00, #E6B800); color: #000; padding: 14px 28px; border-radius: 8px; font-weight: bold; font-size: 1rem; border: none; cursor: pointer;">
+                    💳 Payer maintenant
+                </button>
+            </div>
+            <p style="color: #A0AEC0; font-size: 0.85rem; margin-bottom: 15px;">
+                👆 Cliquez pour ouvrir Wave/Orange Money, puis envoyez le montant.
+            </p>
+            <button onclick="fermerModalePaiement()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
+                Annuler
+            </button>
+        </div>
+
+        <!-- ÉTAPE 2 : Confirmation -->
+        <div id="modal-step-2" style="display: none;">
+            <div style="background: #0D0D0D; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #28a745;">
+                <p style="color: #28a745; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;">✅ Vous avez payé ?</p>
+                <p style="color: #A0AEC0; font-size: 0.9rem;">
+                    Cliquez ci-dessous pour confirmer votre réservation. L'admin validera votre paiement.
+                </p>
+            </div>
+            <button class="btn-attract ripple" onclick="confirmerPaiement()" style="width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-bottom: 10px;">
+                ✅ Confirmer mon paiement
+            </button>
+            <button onclick="retourEtape1()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
+                ← Retour
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+    document.getElementById('date-match').min = new Date().toISOString().split('T')[0];
+
+    function toggleRules() {
+        const content = document.getElementById('rules-content');
+        const arrow = document.getElementById('rules-arrow');
+        content.classList.toggle('open');
+        arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
+    }
+</script>
+<script src="script.js"></script>
+
+<script>
+    (function() {
+        const splash = document.getElementById('splash-screen');
+        if (!splash) return;
+
+        const hasSeenSplash = sessionStorage.getItem('kbtSplashSeen');
+
+        if (hasSeenSplash) {
+            splash.style.display = 'none';
+        } else {
+            sessionStorage.setItem('kbtSplashSeen', 'true');
+            setTimeout(() => {
+                splash.classList.add('hide');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 700);
+            }, 2500);
+        }
+    })();
+</script>
+
+</body>
+</html>
