@@ -22,9 +22,9 @@ const OM_LINK = "tel:%23144%2339%23619506%23";
 const ADMIN_PASSWORD = "KBT2026";
 const VALIDATION_DELAY_MS = 30 * 60 * 1000; // 30 MINUTES
 
-// ⭐ CONFIGURATION TELEGRAM
+// ⭐ CONFIGURATION TELEGRAM (Groupe)
 const TELEGRAM_BOT_TOKEN = "8653735403:AAHujm8OSWpiYizyBgcKdI50uRAGZADNoD8";
-const TELEGRAM_CHAT_ID = "7706550230";
+const TELEGRAM_CHAT_ID = "-5394160556"; // ⭐ Chat ID du groupe KBT SPORT ALERT
 
 const BLOCKED_SLOTS = [
     { date: '2026-09-05', start: '22:00', end: '23:00', reason: 'Location douanier' },
@@ -105,7 +105,7 @@ async function envoyerNotificationTelegram(reservation) {
                 parse_mode: 'Markdown'
             })
         });
-        console.log("✅ Notification Telegram envoyée");
+        console.log("✅ Notification Telegram envoyée au groupe");
     } catch (err) {
         console.error("❌ Erreur notification Telegram:", err);
     }
@@ -161,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dateInput.value = today;
     }
 
-    // Année automatique dans le footer
     const footerYear = document.getElementById('footer-year');
     if (footerYear) footerYear.textContent = new Date().getFullYear();
 
@@ -543,7 +542,7 @@ window.confirmerPaiement = async function () {
 
     await database.ref(`kbt_reservations_temp/${res.id}`).remove();
 
-    // 📱 NOTIFICATION TELEGRAM
+    // 📱 NOTIFICATION TELEGRAM AU GROUPE
     await envoyerNotificationTelegram(res);
 
     hideLoader();
