@@ -25,13 +25,6 @@ const VALIDATION_DELAY_MS = 30 * 60 * 1000;
 const TELEGRAM_BOT_TOKEN = "8653735403:AAHujm8OSWpiYizyBgcKdI50uRAGZADNoD8";
 const TELEGRAM_CHAT_ID = "-5394160556";
 
-const CODES_PROMO = {
-    "KBT2026": 20,
-    "BIENVENUE10": 10,
-    "FIDELE15": 15,
-    "NOEL25": 25
-};
-
 const BLOCKED_SLOTS = [
     { date: '2026-09-05', start: '22:00', end: '23:00', reason: 'Location douanier' },
     { date: '2026-09-12', start: '22:00', end: '23:00', reason: 'Location douanier' },
@@ -49,7 +42,6 @@ let selectedSlot = null;
 let isAdmin = false;
 let pendingReservation = null;
 let lienPaiementActuel = '';
-let codePromoActif = null;
 let noteAvisActuelle = 5;
 
 // ============================================
@@ -133,36 +125,6 @@ function getCreneauxPending(dateStr) {
 }
 
 // ============================================
-// CODE PROMO
-// ============================================
-window.verifierCodePromo = function() {
-    const input = document.getElementById('code-promo');
-    const messageEl = document.getElementById('promo-message');
-    const code = input.value.trim().toUpperCase();
-
-    if (!code) {
-        codePromoActif = null;
-        messageEl.textContent = '';
-        messageEl.className = 'promo-message';
-        calculerPrix();
-        return;
-    }
-
-    if (CODES_PROMO[code]) {
-        codePromoActif = { code: code, reduction: CODES_PROMO[code] };
-        messageEl.textContent = `✅ Code appliqué : -${CODES_PROMO[code]}%`;
-        messageEl.className = 'promo-message success';
-        showToast(`Code promo activé : -${CODES_PROMO[code]}%`, 'success');
-    } else {
-        codePromoActif = null;
-        messageEl.textContent = `❌ Code invalide`;
-        messageEl.className = 'promo-message error';
-        showToast("Code promo invalide", "error");
-    }
-    calculerPrix();
-};
-
-// ============================================
 // CALCUL DU PRIX
 // ============================================
 window.calculerPrix = () => {
@@ -170,21 +132,9 @@ window.calculerPrix = () => {
     const dureeSelect = document.getElementById('duree');
     const totalPrice = document.getElementById('total-price');
     const depositEl = document.getElementById('deposit-amount');
-    const reductionEl = document.getElementById('reduction-display');
     if (!tarifSelect || !dureeSelect || !totalPrice) return;
 
-    let total = parseInt(tarifSelect.value) * parseInt(dureeSelect.value);
-
-    if (codePromoActif) {
-        const reduction = Math.round(total * (codePromoActif.reduction / 100));
-        total = total - reduction;
-        if (reductionEl) {
-            reductionEl.style.display = 'block';
-            reductionEl.textContent = `🎟️ Réduction appliquée : -${new Intl.NumberFormat('fr-FR').format(reduction)} F (${codePromoActif.code})`;
-        }
-    } else {
-        if (reductionEl) reductionEl.style.display = 'none';
-    }
+    const total = parseInt(tarifSelect.value) * parseInt(dureeSelect.value);
 
     totalPrice.innerText = new Intl.NumberFormat('fr-FR').format(total) + " FCFA";
     if (depositEl) {
@@ -484,12 +434,7 @@ function initialiserApplication() {
                 listeCreneaux.push(secondSlot);
             }
 
-            let total = tarifValue * dureeValue;
-            let reductionMontant = 0;
-            if (codePromoActif) {
-                reductionMontant = Math.round(total * (codePromoActif.reduction / 100));
-                total = total - reductionMontant;
-            }
+            const total = tarifValue * dureeValue;
             const acompte = Math.round(total / 2);
 
             const tempId = 'temp_' + Date.now();
@@ -505,8 +450,6 @@ function initialiserApplication() {
                 prixTotal: total,
                 acompte: acompte,
                 paiement: paiementSelect.value,
-                codePromo: codePromoActif ? codePromoActif.code : null,
-                reduction: reductionMontant,
                 statut: 'en_attente',
                 createdAt: firebase.database.ServerValue.TIMESTAMP
             };
@@ -641,9 +584,6 @@ window.confirmerPaiement = async function () {
 
     showToast("✅ Réservation envoyée ! En attente de validation (30 min).", "success");
     document.getElementById('reservation-form').reset();
-    document.getElementById('promo-message').textContent = '';
-    document.getElementById('reduction-display').style.display = 'none';
-    codePromoActif = null;
     selectedSlot = null;
 };
 
@@ -704,7 +644,7 @@ function renderStats() {
 }
 
 // ============================================
-// ⭐ RAPPORT PDF
+// RAPPORT PDF
 // ============================================
 window.genererRapportPDF = function() {
     const { jsPDF } = window.jspdf;
@@ -733,7 +673,6 @@ window.genererRapportPDF = function() {
     const clients = new Set(validees.map(r => r.phone));
     const clientsUniques = clients.size;
 
-    // En-tête
     doc.setFillColor(20, 20, 20);
     doc.rect(0, 0, 210, 40, 'F');
     doc.setTextColor(255, 204, 0);
@@ -745,7 +684,6 @@ window.genererRapportPDF = function() {
     doc.setFont('helvetica', 'normal');
     doc.text('Rapport mensuel - ' + moisNom + ' ' + anneeActuelle, 105, 30, { align: 'center' });
 
-    // Résumé
     let yPos = 55;
     doc.setTextColor(20, 20, 20);
     doc.setFontSize(14);
@@ -766,7 +704,6 @@ window.genererRapportPDF = function() {
     doc.text('Clients uniques : ' + clientsUniques, 15, yPos);
     yPos += 15;
 
-    // Détail réservations
     if (validees.length > 0) {
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
@@ -795,7 +732,6 @@ window.genererRapportPDF = function() {
         yPos = doc.lastAutoTable.finalY + 15;
     }
 
-    // Top 5 clients
     if (clientsUniques > 0) {
         const compteurClients = {};
         validees.forEach(r => {
@@ -826,7 +762,6 @@ window.genererRapportPDF = function() {
         yPos = doc.lastAutoTable.finalY + 15;
     }
 
-    // Créneaux populaires
     const compteurCreneaux = {};
     validees.forEach(r => {
         r.slot.split(', ').forEach(s => {
@@ -855,7 +790,6 @@ window.genererRapportPDF = function() {
         });
     }
 
-    // Pied de page
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
@@ -901,7 +835,6 @@ function renderAdmin() {
                     <p style="color:#E2E8F0; font-size:0.9rem; margin-bottom:5px;">📅 ${escapeHTML(r.date)} — ${escapeHTML(r.slot)}</p>
                     <p style="color:#E2E8F0; font-size:0.9rem; margin-bottom:5px;">⚽ ${escapeHTML(r.equipeA)} vs ${escapeHTML(r.equipeB)}</p>
                     <p style="color:#FFCC00; font-size:0.9rem; margin-bottom:10px;">💰 Acompte : ${new Intl.NumberFormat('fr-FR').format(r.acompte)} FCFA (${r.paiement === 'wave' ? 'Wave' : 'OM'})</p>
-                    ${r.codePromo ? `<p style="color:#28a745; font-size:0.85rem; margin-bottom:10px;">🎟️ Code promo : ${escapeHTML(r.codePromo)} (-${r.reduction} F)</p>` : ''}
                     <div style="display:flex; gap:8px;">
                         <button class="btn-valider-attract ripple" onclick="validerReservation('${r.firebaseKey}')" style="background:#28a745;color:white;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">✅ Valider</button>
                         <button class="btn-rejeter-attract ripple" onclick="rejeterReservation('${r.firebaseKey}')" style="background:#dc3545;color:white;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">❌ Rejeter</button>

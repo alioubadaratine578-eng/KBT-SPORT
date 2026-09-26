@@ -125,15 +125,6 @@
         </div>
 
         <div class="form-group">
-            <label>🎟️ Code promo (optionnel) :</label>
-            <div class="promo-row">
-                <input type="text" id="code-promo" placeholder="Ex: KBT2026" style="text-transform: uppercase;">
-                <button type="button" class="btn-promo" onclick="verifierCodePromo()">Appliquer</button>
-            </div>
-            <p id="promo-message" class="promo-message"></p>
-        </div>
-
-        <div class="form-group">
             <label>Terrain & Durée :</label>
             <select id="tarif-select" onchange="calculerPrix()">
                 <option value="30000">Terrain complet - 30.000 FCFA</option>
@@ -178,7 +169,6 @@
         <div class="summary-box">
             <h3>Total à payer</h3>
             <p id="total-price">30.000 FCFA</p>
-            <p id="reduction-display" class="reduction-display" style="display:none;"></p>
         </div>
 
         <button type="submit" id="submit-btn" class="btn-attract ripple">Valider la réservation & Payer l'acompte 💳</button>
@@ -210,7 +200,6 @@
             <div id="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;"></div>
         </div>
 
-        <!-- ⭐ BOUTON PDF -->
         <div style="margin-bottom: 25px; text-align: center;">
             <button class="btn-attract ripple" onclick="genererRapportPDF()" style="background: linear-gradient(135deg, #dc3545, #b02a37); color: white; padding: 14px 28px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">
                 📄 Télécharger le rapport PDF du mois
@@ -275,7 +264,7 @@
         <div class="footer-dev-card">
             <div class="dev-avatar">💻</div>
             <div class="dev-info">
-                <p class="dev-role">👨‍💻 Développé par</p>
+                <p class="dev-role">👨‍💻 Développé par un Etudiant en informatique</p>
                 <p class="dev-name">Génie Logiciel</p>
                 <p class="dev-contact">
                     <a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">📞 75 641 80 77</a>
@@ -293,7 +282,7 @@
         </div>
         <div class="footer-bottom">
             <p>© <span id="footer-year"></span> <strong>KBT SPORT</strong> — Tous droits réservés.</p>
-            <p class="footer-credit">Fait avec ❤️ au Sénégal 🇸🇳</p>
+            <p class="footer-credit">Fait au Sénégal 🇸🇳</p>
         </div>
     </footer>
 </div>
