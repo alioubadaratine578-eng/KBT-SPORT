@@ -243,7 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function initialiserApplication() {
     const form = document.getElementById('reservation-form');
     const dateInput = document.getElementById('date-match');
-    const chatContainer = document.getElementById('comments-container');
 
     const urlParams = new URLSearchParams(window.location.search);
     isAdmin = urlParams.get('admin') === ADMIN_PASSWORD;
@@ -278,36 +277,6 @@ function initialiserApplication() {
     });
 
     setInterval(nettoyerReservationsExpirees, 30000);
-
-    database.ref('commentaires_globaux').orderByChild('date').limitToLast(50).on('value', (snapshot) => {
-        if (!chatContainer) return;
-        chatContainer.innerHTML = "";
-        const data = snapshot.val();
-        if (data) {
-            const listMessages = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-            listMessages.forEach((comment) => {
-                let heureAffichee = "...";
-                if (comment.date) heureAffichee = new Date(comment.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                const boutonSupprimer = isAdmin
-                    ? `<button class="delete-btn" onclick="supprimerMessage('${comment.id}')" style="background:#ff4d4d; color:white; border:none; padding:3px 8px; font-size:0.75rem; border-radius:4px; cursor:pointer; margin-left:10px;">🗑️</button>`
-                    : '';
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message-bubble';
-                messageDiv.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span style="font-weight:bold; color:#FFCC00;">${escapeHTML(comment.pseudo)}</span>
-                        <div>
-                            <span style="font-size:0.8rem; color:#888;">${heureAffichee}</span>
-                            ${boutonSupprimer}
-                        </div>
-                    </div>
-                    <p style="margin:0; word-wrap:break-word;">${escapeHTML(comment.message)}</p>
-                `;
-                chatContainer.appendChild(messageDiv);
-            });
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    });
 
     function genererCreneaux() {
         const slotsContainer = document.getElementById('slots-container');
@@ -898,23 +867,6 @@ window.supprimerReservation = async function (key) {
     else await database.ref(`kbt_reservations_payees/${dateRes}`).remove();
     await database.ref(`kbt_reservations_admin/${key}`).remove();
     showToast("Réservation archivée", "success");
-};
-
-window.ajouterCommentaire = function () {
-    const pseudoInput = document.getElementById('comment-pseudo');
-    const messageInput = document.getElementById('comment-text');
-    const sendBtn = document.getElementById('comment-submit-btn');
-    if (!pseudoInput || !messageInput) return;
-    const pseudo = pseudoInput.value.trim() || "Anonyme";
-    const message = messageInput.value.trim();
-    if (message) {
-        if (sendBtn) { sendBtn.classList.add('btn-flash-success'); setTimeout(() => sendBtn.classList.remove('btn-flash-success'), 600); }
-        database.ref('commentaires_globaux').push({ pseudo: pseudo, message: message, date: firebase.database.ServerValue.TIMESTAMP }).then(() => { messageInput.value = ""; }).catch((e) => console.error(e));
-    } else showToast("Remplis ton message !", "error");
-};
-
-window.supprimerMessage = function (id) {
-    if (confirm("Supprimer ce message ?")) database.ref(`commentaires_globaux/${id}`).remove();
 };
 
 function animerCompteurs() {

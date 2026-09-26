@@ -176,20 +176,6 @@
 
     <hr class="separator">
 
-    <div class="chat-global-container">
-        <h2>Espace Discussion KBT SPORT ⚽</h2>
-        <div id="comments-container" class="comments-stream"></div>
-        <div class="comment-form">
-            <div class="form-group" style="margin-bottom: 10px;">
-                <input type="text" id="comment-pseudo" placeholder="Votre pseudo" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #444; color: #fff; border-radius: 5px;">
-            </div>
-            <textarea id="comment-text" placeholder="Ajoute un message..." required></textarea>
-            <button type="button" id="comment-submit-btn" class="ripple" onclick="ajouterCommentaire()">Envoyer 🚀</button>
-        </div>
-    </div>
-
-    <hr class="separator">
-
     <button id="btn-ouvrir-admin" class="btn-secondary ripple">Espace Administration</button>
 
     <div class="admin-panel" id="admin-panel-zone" style="display: none;">
@@ -240,7 +226,6 @@
                     <li><a href="#reservation-form">📅 Réserver un créneau</a></li>
                     <li><a href="#slots-container">🕐 Voir les créneaux</a></li>
                     <li><a href="javascript:void(0)" onclick="toggleRules(); document.getElementById('rules-content').classList.add('open');">📋 Règlement intérieur</a></li>
-                    <li><a href="javascript:void(0)" onclick="document.getElementById('comments-container').scrollIntoView({behavior:'smooth'})">💬 Espace discussion</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -264,7 +249,7 @@
         <div class="footer-dev-card">
             <div class="dev-avatar">💻</div>
             <div class="dev-info">
-                <p class="dev-role">👨‍💻 Développé par un Etudiant en informatique</p>
+                <p class="dev-role">👨‍💻 Développé par</p>
                 <p class="dev-name">Génie Logiciel</p>
                 <p class="dev-contact">
                     <a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">📞 75 641 80 77</a>
@@ -282,7 +267,7 @@
         </div>
         <div class="footer-bottom">
             <p>© <span id="footer-year"></span> <strong>KBT SPORT</strong> — Tous droits réservés.</p>
-            <p class="footer-credit">Fait au Sénégal 🇸🇳</p>
+            <p class="footer-credit">Fait avec ❤️ au Sénégal 🇸🇳</p>
         </div>
     </footer>
 </div>
