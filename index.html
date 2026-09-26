@@ -9,7 +9,6 @@
 </head>
 <body>
 
-<!-- ⭐ ÉCRAN D'ACCUEIL ANIMÉ -->
 <div id="splash-screen">
     <div class="splash-content">
         <div class="splash-logo-wrapper">
@@ -19,9 +18,7 @@
         </div>
         <h1 class="splash-title">KBT SPORT</h1>
         <p class="splash-subtitle">Karang Poste</p>
-        <div class="splash-bar">
-            <div class="splash-bar-fill"></div>
-        </div>
+        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
         <p class="splash-loading-text">Chargement</p>
     </div>
     <div class="splash-bottom-bar"></div>
@@ -33,18 +30,9 @@
     <p class="description">Réservez votre terrain de football en ligne facilement et rapidement !</p>
 
     <div class="stats-row">
-        <div class="stat-item">
-            <span class="stat-number" data-target="500">0</span>+
-            <p>Matchs réservés</p>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number" data-target="120">0</span>+
-            <p>Clients fidèles</p>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number" data-target="98">0</span>%
-            <p>Satisfaction</p>
-        </div>
+        <div class="stat-item"><span class="stat-number" data-target="500">0</span>+<p>Matchs réservés</p></div>
+        <div class="stat-item"><span class="stat-number" data-target="120">0</span>+<p>Clients fidèles</p></div>
+        <div class="stat-item"><span class="stat-number" data-target="98">0</span>%<p>Satisfaction</p></div>
     </div>
 
     <div class="rules-section">
@@ -78,6 +66,42 @@
 
     <img src="grand terrain.jpeg" alt="Terrain KBT SPORT" class="terrain-preview">
 
+    <div class="avis-section">
+        <h2>⭐ Avis de nos clients</h2>
+        <div id="avis-moyenne" class="avis-moyenne"></div>
+        <div id="avis-list" class="avis-list"></div>
+        <button class="btn-secondary ripple" onclick="ouvrirModaleAvis()">✍️ Laisser un avis</button>
+    </div>
+
+    <div id="avis-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>✍️ Votre avis</h2>
+            <div class="form-group">
+                <label>Votre nom :</label>
+                <input type="text" id="avis-nom" required placeholder="Ex: Oumar D." maxlength="30">
+            </div>
+            <div class="form-group">
+                <label>Votre note :</label>
+                <div class="stars-rating" id="stars-container">
+                    <span data-star="1" onclick="setNote(1)">⭐</span>
+                    <span data-star="2" onclick="setNote(2)">⭐</span>
+                    <span data-star="3" onclick="setNote(3)">⭐</span>
+                    <span data-star="4" onclick="setNote(4)">⭐</span>
+                    <span data-star="5" onclick="setNote(5)">⭐</span>
+                </div>
+                <p class="note-actuelle" id="note-actuelle">5/5</p>
+            </div>
+            <div class="form-group">
+                <label>Votre commentaire :</label>
+                <textarea id="avis-commentaire" required placeholder="Décrivez votre expérience..." maxlength="200" rows="3"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-attract ripple" onclick="envoyerAvis()">📤 Publier</button>
+                <button class="btn-cancel" onclick="fermerModaleAvis()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
     <form id="reservation-form">
         <div class="form-group">
             <label>Nom complet :</label>
@@ -99,6 +123,16 @@
             <label>Équipe B :</label>
             <input type="text" id="equipe-b" required placeholder="Nom équipe B">
         </div>
+
+        <div class="form-group">
+            <label>🎟️ Code promo (optionnel) :</label>
+            <div class="promo-row">
+                <input type="text" id="code-promo" placeholder="Ex: KBT2026" style="text-transform: uppercase;">
+                <button type="button" class="btn-promo" onclick="verifierCodePromo()">Appliquer</button>
+            </div>
+            <p id="promo-message" class="promo-message"></p>
+        </div>
+
         <div class="form-group">
             <label>Terrain & Durée :</label>
             <select id="tarif-select" onchange="calculerPrix()">
@@ -138,15 +172,13 @@
             ⚠️ Les samedis 05, 12, 19 et 26 septembre 2026 de 22h à 23h sont réservés par la Location douanier.
         </div>
 
-        <div class="slots-counter">
-            <span id="slots-count">0</span> créneaux disponibles pour cette date
-        </div>
-
+        <div class="slots-counter"><span id="slots-count">0</span> créneaux disponibles pour cette date</div>
         <div class="slots-grid" id="slots-container"></div>
 
         <div class="summary-box">
             <h3>Total à payer</h3>
             <p id="total-price">30.000 FCFA</p>
+            <p id="reduction-display" class="reduction-display" style="display:none;"></p>
         </div>
 
         <button type="submit" id="submit-btn" class="btn-attract ripple">Valider la réservation & Payer l'acompte 💳</button>
@@ -173,6 +205,18 @@
     <div class="admin-panel" id="admin-panel-zone" style="display: none;">
         <h2>Gestion des réservations</h2>
 
+        <div id="admin-stats-container" style="margin-bottom: 25px;">
+            <h3 style="color: var(--primary-color); margin-bottom: 15px;">📊 Statistiques</h3>
+            <div id="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;"></div>
+        </div>
+
+        <!-- ⭐ BOUTON PDF -->
+        <div style="margin-bottom: 25px; text-align: center;">
+            <button class="btn-attract ripple" onclick="genererRapportPDF()" style="background: linear-gradient(135deg, #dc3545, #b02a37); color: white; padding: 14px 28px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">
+                📄 Télécharger le rapport PDF du mois
+            </button>
+        </div>
+
         <div id="admin-pending-container" style="margin-bottom: 20px;">
             <h3 style="color: var(--primary-color); margin-bottom: 12px;">⏳ Réservations à valider</h3>
         </div>
@@ -193,18 +237,14 @@
         </div>
     </div>
 
-    <!-- ⭐ FOOTER KBT SPORT -->
     <footer class="kbt-footer">
         <div class="footer-top">
-            <!-- Colonne 1 : Identité -->
             <div class="footer-col">
                 <img src="logo.jpeg" alt="KBT SPORT" class="footer-logo">
                 <h3>⚽ KBT SPORT</h3>
                 <p>Réservez votre terrain de football en ligne facilement et rapidement.</p>
                 <p class="footer-flag">🇸🇳 Karang Poste</p>
             </div>
-
-            <!-- Colonne 2 : Navigation -->
             <div class="footer-col">
                 <h4>🔗 Navigation</h4>
                 <ul>
@@ -214,30 +254,14 @@
                     <li><a href="javascript:void(0)" onclick="document.getElementById('comments-container').scrollIntoView({behavior:'smooth'})">💬 Espace discussion</a></li>
                 </ul>
             </div>
-
-            <!-- Colonne 3 : Contact -->
             <div class="footer-col">
                 <h4>📞 Contact</h4>
                 <ul>
-                    <li>
-                        <a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">
-                            💬 WhatsApp : 75 641 80 77
-                        </a>
-                    </li>
-                    <li>
-                        <a href="tel:+221756418077">
-                            📱 Appeler : 75 641 80 77
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.google.com/maps/search/Karang+Poste" target="_blank" rel="noopener noreferrer">
-                            📍 Karang Poste, Sénégal
-                        </a>
-                    </li>
+                    <li><a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">💬 WhatsApp : 75 641 80 77</a></li>
+                    <li><a href="tel:+221756418077">📱 Appeler : 75 641 80 77</a></li>
+                    <li><a href="https://www.google.com/maps/search/Karang+Poste" target="_blank" rel="noopener noreferrer">📍 Karang Poste, Sénégal</a></li>
                 </ul>
             </div>
-
-            <!-- Colonne 4 : Paiements -->
             <div class="footer-col">
                 <h4>💳 Paiements acceptés</h4>
                 <div class="payment-badges">
@@ -248,43 +272,25 @@
                 <p class="footer-info">Acompte 50% obligatoire pour bloquer votre créneau.</p>
             </div>
         </div>
-
-        <!-- ⭐ CARTE DÉVELOPPEUR -->
         <div class="footer-dev-card">
             <div class="dev-avatar">💻</div>
             <div class="dev-info">
                 <p class="dev-role">👨‍💻 Développé par</p>
                 <p class="dev-name">Génie Logiciel</p>
                 <p class="dev-contact">
-                    <a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">
-                        📞 75 641 80 77
-                    </a>
+                    <a href="https://wa.me/221756418077" target="_blank" rel="noopener noreferrer">📞 75 641 80 77</a>
                     <span class="dev-sep">•</span>
-                    <a href="https://www.google.com/maps/search/Karang+Poste" target="_blank" rel="noopener noreferrer">
-                        📍 Karang Poste
-                    </a>
+                    <a href="https://www.google.com/maps/search/Karang+Poste" target="_blank" rel="noopener noreferrer">📍 Karang Poste</a>
                 </p>
             </div>
         </div>
-
-        <!-- Horaires -->
         <div class="footer-hours">
             <h4>🕐 Horaires d'ouverture</h4>
             <div class="hours-grid">
-                <div class="hour-item">
-                    <span class="hour-icon">🌅</span>
-                    <span class="hour-label">Matin</span>
-                    <span class="hour-value">07h00 — 12h15</span>
-                </div>
-                <div class="hour-item">
-                    <span class="hour-icon">☀️</span>
-                    <span class="hour-label">Après-midi</span>
-                    <span class="hour-value">16h00 — 03h15</span>
-                </div>
+                <div class="hour-item"><span class="hour-icon">🌅</span><span class="hour-label">Matin</span><span class="hour-value">07h00 — 12h15</span></div>
+                <div class="hour-item"><span class="hour-icon">☀️</span><span class="hour-label">Après-midi</span><span class="hour-value">16h00 — 03h15</span></div>
             </div>
         </div>
-
-        <!-- Bottom -->
         <div class="footer-bottom">
             <p>© <span id="footer-year"></span> <strong>KBT SPORT</strong> — Tous droits réservés.</p>
             <p class="footer-credit">Fait avec ❤️ au Sénégal 🇸🇳</p>
@@ -293,7 +299,6 @@
 </div>
 
 <div id="toast-container"></div>
-
 <div id="loader" class="loader hidden">
     <div class="loader-content">
         <div class="loader-spinner"></div>
@@ -301,7 +306,6 @@
     </div>
 </div>
 
-<!-- MODALE DE PAIEMENT -->
 <div id="payment-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: #1A1A1A; border: 2px solid var(--primary-color); border-radius: 16px; max-width: 450px; width: 100%; padding: 30px; text-align: center;">
         <h2 style="color: var(--primary-color); margin-bottom: 15px;">💳 Paiement de l'acompte</h2>
@@ -309,47 +313,32 @@
             Envoyez <strong style="color: var(--primary-color); font-size: 1.3rem;" id="modal-montant">15.000 FCFA</strong><br>
             à <strong>Karang Business Tine & Frère</strong>
         </p>
-
-        <!-- ÉTAPE 1 : Payer maintenant -->
         <div id="modal-step-1">
             <div style="background: #0D0D0D; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
                 <p style="color: #A0AEC0; font-size: 0.9rem; margin-bottom: 10px;">Cliquez sur le bouton ci-dessous pour payer :</p>
-                <button class="btn-attract ripple" onclick="ouvrirPaiement()" style="display: inline-block; background: linear-gradient(135deg, #FFCC00, #E6B800); color: #000; padding: 14px 28px; border-radius: 8px; font-weight: bold; font-size: 1rem; border: none; cursor: pointer;">
-                    💳 Payer maintenant
-                </button>
+                <button class="btn-attract ripple" onclick="ouvrirPaiement()" style="display: inline-block; background: linear-gradient(135deg, #FFCC00, #E6B800); color: #000; padding: 14px 28px; border-radius: 8px; font-weight: bold; font-size: 1rem; border: none; cursor: pointer;">💳 Payer maintenant</button>
             </div>
-            <p style="color: #A0AEC0; font-size: 0.85rem; margin-bottom: 15px;">
-                👆 Cliquez pour ouvrir Wave/Orange Money, puis envoyez le montant.
-            </p>
-            <button onclick="fermerModalePaiement()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
-                Annuler
-            </button>
+            <p style="color: #A0AEC0; font-size: 0.85rem; margin-bottom: 15px;">👆 Cliquez pour ouvrir Wave/Orange Money, puis envoyez le montant.</p>
+            <button onclick="fermerModalePaiement()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">Annuler</button>
         </div>
-
-        <!-- ÉTAPE 2 : Confirmation -->
         <div id="modal-step-2" style="display: none;">
             <div style="background: #0D0D0D; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #28a745;">
                 <p style="color: #28a745; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;">✅ Vous avez payé ?</p>
-                <p style="color: #A0AEC0; font-size: 0.9rem;">
-                    Cliquez ci-dessous pour confirmer votre réservation. L'admin validera votre paiement.
-                </p>
+                <p style="color: #A0AEC0; font-size: 0.9rem;">Cliquez ci-dessous pour confirmer votre réservation.</p>
             </div>
-            <button class="btn-attract ripple" onclick="confirmerPaiement()" style="width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-bottom: 10px;">
-                ✅ Confirmer mon paiement
-            </button>
-            <button onclick="retourEtape1()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
-                ← Retour
-            </button>
+            <button class="btn-attract ripple" onclick="confirmerPaiement()" style="width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-bottom: 10px;">✅ Confirmer mon paiement</button>
+            <button onclick="retourEtape1()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">← Retour</button>
         </div>
     </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
 <script>
     document.getElementById('date-match').min = new Date().toISOString().split('T')[0];
-
     function toggleRules() {
         const content = document.getElementById('rules-content');
         const arrow = document.getElementById('rules-arrow');
@@ -358,27 +347,20 @@
     }
 </script>
 <script src="script.js"></script>
-
 <script>
     (function() {
         const splash = document.getElementById('splash-screen');
         if (!splash) return;
-
         const hasSeenSplash = sessionStorage.getItem('kbtSplashSeen');
-
-        if (hasSeenSplash) {
-            splash.style.display = 'none';
-        } else {
+        if (hasSeenSplash) { splash.style.display = 'none'; }
+        else {
             sessionStorage.setItem('kbtSplashSeen', 'true');
             setTimeout(() => {
                 splash.classList.add('hide');
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                }, 700);
+                setTimeout(() => { splash.style.display = 'none'; }, 700);
             }, 2500);
         }
     })();
 </script>
-
 </body>
 </html>

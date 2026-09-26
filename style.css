@@ -1106,3 +1106,225 @@ td button:hover {
 ::-webkit-scrollbar-track { background: #0A0A0A; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+/* ==========================================
+   ⭐ SECTION AVIS CLIENTS
+   ========================================== */
+.avis-section {
+    margin: 30px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.avis-section h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.avis-moyenne {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 204, 0, 0.05);
+    border-radius: 10px;
+}
+
+.avis-moyenne .note-big {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+}
+
+.avis-moyenne .avis-count {
+    color: #A0AEC0;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.avis-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.avis-item {
+    background: #141414;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 3px solid var(--primary-color);
+    animation: fadeInAvis 0.4s ease;
+}
+
+@keyframes fadeInAvis {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.avis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.avis-nom {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.avis-date {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.avis-note {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.avis-commentaire {
+    color: #E2E8F0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Modale avis */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: #1A1A1A;
+    border: 2px solid var(--primary-color);
+    border-radius: 16px;
+    max-width: 450px;
+    width: 100%;
+    padding: 30px;
+    animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: #A0AEC0;
+    border: 2px solid #444 !important;
+}
+
+.stars-rating {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 2rem;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.stars-rating span {
+    transition: transform 0.2s ease, filter 0.2s ease;
+    filter: grayscale(1) opacity(0.4);
+}
+
+.stars-rating span.active {
+    filter: none;
+    transform: scale(1.15);
+}
+
+.stars-rating span:hover {
+    transform: scale(1.2);
+}
+
+.note-actuelle {
+    text-align: center;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* ==========================================
+   ⭐ CODES PROMO
+   ========================================== */
+.promo-row {
+    display: flex;
+    gap: 8px;
+}
+
+.promo-row input {
+    flex: 1;
+}
+
+.btn-promo {
+    background: var(--primary-color);
+    color: #000;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.btn-promo:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.promo-message {
+    font-size: 0.85rem;
+    margin-top: 8px;
+    font-weight: 600;
+    min-height: 20px;
+}
+
+.promo-message.success {
+    color: #28a745;
+}
+
+.promo-message.error {
+    color: #dc3545;
+}
+
+.reduction-display {
+    text-align: center;
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 8px;
+    animation: pulse-attract 1.5s ease-in-out infinite;
+}
