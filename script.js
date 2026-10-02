@@ -26,7 +26,7 @@ const TELEGRAM_BOT_TOKEN = "8653735403:AAHujm8OSWpiYizyBgcKdI50uRAGZADNoD8";
 const TELEGRAM_CHAT_ID = "-5394160556";
 
 // ============================================
-// CRÉNEAUX BLOQUÉS (Douaniers + Club Fitness)
+// CRÉNEAUX BLOQUÉS
 // ============================================
 const BLOCKED_SLOTS = [
     // ===== Septembre 2026 - DOUANIERS =====
@@ -41,28 +41,46 @@ const BLOCKED_SLOTS = [
     { date: '2026-10-17', start: '22:00', end: '23:00', reason: 'Location douanier' },
     { date: '2026-10-24', start: '22:00', end: '23:00', reason: 'Location douanier' },
 
-    // ===== Octobre 2026 - CLUB DE FITNESS (21h-22h) =====
+    // ===== Octobre 2026 - CLUB FITNESS (20h-22h) =====
     // Lundis
+    { date: '2026-10-05', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-05', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-12', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-12', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-19', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-19', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-26', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-26', start: '21:00', end: '22:00', reason: 'Club de fitness' },
     // Mercredis
+    { date: '2026-10-07', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-07', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-14', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-14', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-21', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-21', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-28', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-28', start: '21:00', end: '22:00', reason: 'Club de fitness' },
     // Vendredis
+    { date: '2026-10-02', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-02', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-09', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-09', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-16', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-16', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-23', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-23', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-30', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-30', start: '21:00', end: '22:00', reason: 'Club de fitness' },
     // Samedis
+    { date: '2026-10-03', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-03', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-10', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-10', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-17', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-17', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-24', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-24', start: '21:00', end: '22:00', reason: 'Club de fitness' },
+    { date: '2026-10-31', start: '20:00', end: '21:00', reason: 'Club de fitness' },
     { date: '2026-10-31', start: '21:00', end: '22:00', reason: 'Club de fitness' }
 ];
 
@@ -389,9 +407,7 @@ function initialiserApplication() {
         const info = document.getElementById('blocked-info');
         if (!info) return;
         const blockedDates = [
-            // Septembre
             '2026-09-05', '2026-09-12', '2026-09-19', '2026-09-26',
-            // Octobre
             '2026-10-02', '2026-10-03', '2026-10-05', '2026-10-07',
             '2026-10-09', '2026-10-10', '2026-10-12', '2026-10-14',
             '2026-10-16', '2026-10-17', '2026-10-19', '2026-10-21',
