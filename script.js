@@ -39,7 +39,13 @@ const BLOCKED_SLOTS = [
     { date: '2026-10-03', start: '22:00', end: '23:00', reason: 'Location douanier' },
     { date: '2026-10-10', start: '22:00', end: '23:00', reason: 'Location douanier' },
     { date: '2026-10-17', start: '22:00', end: '23:00', reason: 'Location douanier' },
-    { date: '2026-10-24', start: '22:00', end: '23:00', reason: 'Location douanier' }
+    { date: '2026-10-24', start: '22:00', end: '23:00', reason: 'Location douanier' },
+
+    // ===== Novembre 2026 - DOUANIERS (samedis 22h-23h) =====
+    { date: '2026-11-07', start: '22:00', end: '23:00', reason: 'Location douanier' },
+    { date: '2026-11-14', start: '22:00', end: '23:00', reason: 'Location douanier' },
+    { date: '2026-11-21', start: '22:00', end: '23:00', reason: 'Location douanier' },
+    { date: '2026-11-28', start: '22:00', end: '23:00', reason: 'Location douanier' }
 ];
 
 // ============================================
@@ -365,8 +371,12 @@ function initialiserApplication() {
         const info = document.getElementById('blocked-info');
         if (!info) return;
         const blockedDates = [
+            // Septembre 2026
             '2026-09-05', '2026-09-12', '2026-09-19', '2026-09-26',
-            '2026-10-03', '2026-10-10', '2026-10-17', '2026-10-24'
+            // Octobre 2026
+            '2026-10-03', '2026-10-10', '2026-10-17', '2026-10-24',
+            // Novembre 2026
+            '2026-11-07', '2026-11-14', '2026-11-21', '2026-11-28'
         ];
         info.style.display = blockedDates.includes(dateStr) ? 'block' : 'none';
     }
