@@ -9,6 +9,7 @@
 </head>
 <body>
 
+<!-- ═══════ SPLASH SCREEN ═══════ -->
 <div id="splash-screen">
     <div class="splash-content">
         <div class="splash-logo-wrapper">
@@ -24,171 +25,372 @@
     <div class="splash-bottom-bar"></div>
 </div>
 
+<!-- ═══════ ÉCRAN DE CHOIX ═══════ -->
+<div id="choice-screen" style="display: none;">
+    <div class="choice-content">
+        <div class="choice-header">
+            <img src="logo.jpeg" alt="KBT SPORT" class="choice-brand-logo">
+            <h1>KBT SPORT</h1>
+            <p class="choice-subtitle">Karang Poste</p>
+            <p class="choice-prompt">Choisissez votre espace 👇</p>
+        </div>
+        <div class="choice-cards">
+            <div class="choice-card" onclick="chooseSection('football')">
+                <div class="choice-card-glow"></div>
+                <img src="logo.jpeg" alt="Football" class="choice-logo">
+                <h2>⚽ Football</h2>
+                <p>Réservez votre terrain</p>
+                <span class="choice-cta">Entrer →</span>
+            </div>
+            <div class="choice-card" onclick="chooseSection('fitness')">
+                <div class="choice-card-glow"></div>
+                <img src="logo-fitness.jpeg" alt="Fitness" class="choice-logo">
+                <h2>💃 Club Fitness</h2>
+                <p>Cours de danse & fitness</p>
+                <span class="choice-cta">Entrer →</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <img src="logo.jpeg" alt="Logo KBT SPORT" class="brand-logo" style="margin-top: 10px;">
     <h1>KBT SPORT</h1>
-    <p class="description">Réservez votre terrain de football en ligne facilement et rapidement !</p>
+    <p class="description">Réservez votre terrain ou rejoignez le Club Fitness !</p>
 
-    <div class="stats-row">
-        <div class="stat-item"><span class="stat-number" data-target="500">0</span>+<p>Matchs réservés</p></div>
-        <div class="stat-item"><span class="stat-number" data-target="120">0</span>+<p>Clients fidèles</p></div>
-        <div class="stat-item"><span class="stat-number" data-target="98">0</span>%<p>Satisfaction</p></div>
+    <button class="btn-retour-choix" onclick="retourChoix()">🏠 Changer d'espace</button>
+
+    <!-- ═══════ ONGLETS PRINCIPAUX ═══════ -->
+    <div class="main-tabs">
+        <button class="main-tab active" data-tab="football" onclick="switchTab('football')">⚽ Football</button>
+        <button class="main-tab" data-tab="fitness" onclick="switchTab('fitness')">💃 Club Fitness</button>
     </div>
 
-    <div class="rules-section">
-        <button type="button" class="rules-toggle" onclick="toggleRules()">
-            <span>📋 Règlement intérieur KBT SPORT</span>
-            <span id="rules-arrow">▼</span>
-        </button>
-        <div id="rules-content" class="rules-content">
-            <p class="rules-subtitle">Karang Poste</p>
-            <p>Chers clients, merci de prendre connaissance et de respecter les règles suivantes :</p>
-            <h3>1. Réservations et Paiements</h3>
-            <ul>
-                <li><strong>Réservation en ligne :</strong> Tous les créneaux doivent être réservés à l'avance.</li>
-                <li><strong>Modalités :</strong> Paiements via Wave ou Orange Money.</li>
-                <li><strong>Acompte :</strong> Un acompte de 50% est obligatoire pour bloquer le créneau.</li>
-                <li><strong>Annulation :</strong> <span class="danger-highlight">Acompte non remboursable en cas d'absence.</span></li>
-            </ul>
-            <h3>2. Horaires</h3>
-            <ul>
-                <li><strong>Créneaux :</strong> 07h00 à 12h15 et 16h00 à 03h15.</li>
-                <li>Merci de vous présenter 10 minutes avant le match.</li>
-            </ul>
-            <h3>3. Comportement</h3>
-            <ul>
-                <li><strong>Crampons vissés interdits.</strong></li>
-                <li>Fair-play obligatoire.</li>
-            </ul>
-            <p class="rules-footer">L'équipe KBT SPORT vous souhaite un excellent match ! ⚽</p>
+    <!-- ═══════ SECTION FOOTBALL ═══════ -->
+    <div id="tab-football" class="tab-content active">
+
+        <div class="stats-row">
+            <div class="stat-item"><span class="stat-number" data-target="500">0</span>+<p>Matchs réservés</p></div>
+            <div class="stat-item"><span class="stat-number" data-target="120">0</span>+<p>Clients fidèles</p></div>
+            <div class="stat-item"><span class="stat-number" data-target="98">0</span>%<p>Satisfaction</p></div>
         </div>
-    </div>
 
-    <img src="grand terrain.jpeg" alt="Terrain KBT SPORT" class="terrain-preview">
-
-    <div class="avis-section">
-        <h2>⭐ Avis de nos clients</h2>
-        <div id="avis-moyenne" class="avis-moyenne"></div>
-        <div id="avis-list" class="avis-list"></div>
-        <button class="btn-secondary ripple" onclick="ouvrirModaleAvis()">✍️ Laisser un avis</button>
-    </div>
-
-    <div id="avis-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <h2>✍️ Votre avis</h2>
-            <div class="form-group">
-                <label>Votre nom :</label>
-                <input type="text" id="avis-nom" required placeholder="Ex: Oumar D." maxlength="30">
+        <div class="rules-section">
+            <button type="button" class="rules-toggle" onclick="toggleRules()">
+                <span>📋 Règlement intérieur KBT SPORT</span>
+                <span id="rules-arrow">▼</span>
+            </button>
+            <div id="rules-content" class="rules-content">
+                <p class="rules-subtitle">Karang Poste</p>
+                <p>Chers clients, merci de prendre connaissance et de respecter les règles suivantes :</p>
+                <h3>1. Réservations et Paiements</h3>
+                <ul>
+                    <li><strong>Réservation en ligne :</strong> Tous les créneaux doivent être réservés à l'avance.</li>
+                    <li><strong>Modalités :</strong> Paiements via Wave ou Orange Money.</li>
+                    <li><strong>Acompte :</strong> Un acompte de 50% est obligatoire pour bloquer le créneau.</li>
+                    <li><strong>Annulation :</strong> <span class="danger-highlight">Acompte non remboursable en cas d'absence.</span></li>
+                </ul>
+                <h3>2. Horaires</h3>
+                <ul>
+                    <li><strong>Créneaux :</strong> 07h00 à 12h15 et 16h00 à 03h15.</li>
+                    <li>Merci de vous présenter 10 minutes avant le match.</li>
+                </ul>
+                <h3>3. Comportement</h3>
+                <ul>
+                    <li><strong>Crampons vissés interdits.</strong></li>
+                    <li>Fair-play obligatoire.</li>
+                </ul>
+                <p class="rules-footer">L'équipe KBT SPORT vous souhaite un excellent match ! ⚽</p>
             </div>
-            <div class="form-group">
-                <label>Votre note :</label>
-                <div class="stars-rating" id="stars-container">
-                    <span data-star="1" onclick="setNote(1)">⭐</span>
-                    <span data-star="2" onclick="setNote(2)">⭐</span>
-                    <span data-star="3" onclick="setNote(3)">⭐</span>
-                    <span data-star="4" onclick="setNote(4)">⭐</span>
-                    <span data-star="5" onclick="setNote(5)">⭐</span>
+        </div>
+
+        <img src="grand terrain.jpeg" alt="Terrain KBT SPORT" class="terrain-preview">
+
+        <div class="avis-section">
+            <h2>⭐ Avis de nos clients</h2>
+            <div id="avis-moyenne" class="avis-moyenne"></div>
+            <div id="avis-list" class="avis-list"></div>
+            <button class="btn-secondary ripple" onclick="ouvrirModaleAvis()">✍️ Laisser un avis</button>
+        </div>
+
+        <div id="avis-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h2>✍️ Votre avis</h2>
+                <div class="form-group">
+                    <label>Votre nom :</label>
+                    <input type="text" id="avis-nom" required placeholder="Ex: Oumar D." maxlength="30">
                 </div>
-                <p class="note-actuelle" id="note-actuelle">5/5</p>
+                <div class="form-group">
+                    <label>Votre note :</label>
+                    <div class="stars-rating" id="stars-container">
+                        <span data-star="1" onclick="setNote(1)">⭐</span>
+                        <span data-star="2" onclick="setNote(2)">⭐</span>
+                        <span data-star="3" onclick="setNote(3)">⭐</span>
+                        <span data-star="4" onclick="setNote(4)">⭐</span>
+                        <span data-star="5" onclick="setNote(5)">⭐</span>
+                    </div>
+                    <p class="note-actuelle" id="note-actuelle">5/5</p>
+                </div>
+                <div class="form-group">
+                    <label>Votre commentaire :</label>
+                    <textarea id="avis-commentaire" required placeholder="Décrivez votre expérience..." maxlength="200" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-attract ripple" onclick="envoyerAvis()">📤 Publier</button>
+                    <button class="btn-cancel" onclick="fermerModaleAvis()">Annuler</button>
+                </div>
+            </div>
+        </div>
+
+        <form id="reservation-form">
+            <div class="form-group">
+                <label>Nom complet :</label>
+                <input type="text" id="full-name" required placeholder="Votre nom complet">
             </div>
             <div class="form-group">
-                <label>Votre commentaire :</label>
-                <textarea id="avis-commentaire" required placeholder="Décrivez votre expérience..." maxlength="200" rows="3"></textarea>
+                <label>Numéro WhatsApp :</label>
+                <input type="tel" id="whatsapp-number" required placeholder="Ex: 7XXXXXXXX">
             </div>
-            <div class="modal-actions">
-                <button class="btn-attract ripple" onclick="envoyerAvis()">📤 Publier</button>
-                <button class="btn-cancel" onclick="fermerModaleAvis()">Annuler</button>
+            <div class="form-group">
+                <label>Date du match :</label>
+                <input type="date" id="date-match" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label>Équipe A :</label>
+                <input type="text" id="equipe-a" required placeholder="Nom équipe A">
+            </div>
+            <div class="form-group">
+                <label>Équipe B :</label>
+                <input type="text" id="equipe-b" required placeholder="Nom équipe B">
+            </div>
+            <div class="form-group">
+                <label>Terrain & Durée :</label>
+                <select id="tarif-select" onchange="calculerPrix()">
+                    <option value="30000">Terrain complet - 30.000 FCFA</option>
+                    <option value="15000">Demi-terrain - 15.000 FCFA</option>
+                </select>
+                <select id="duree" onchange="calculerPrix()" style="margin-top: 10px;">
+                    <option value="1">1 heure</option>
+                    <option value="2">2 heures</option>
+                </select>
+            </div>
+            <div class="payment-notice">
+                <h3>💳 Acompte obligatoire</h3>
+                <p>Pour bloquer votre créneau, versez un acompte de <strong>50%</strong> : <span id="deposit-amount">15.000 FCFA</span></p>
+                <p class="payment-warning">⚠️ Sans paiement, le créneau ne sera pas réservé.</p>
+            </div>
+            <div class="form-group">
+                <label>Mode de paiement :</label>
+                <select id="methode-paiement" required>
+                    <option value="wave">Wave 🌊 (Karang Business Tine & Frère)</option>
+                    <option value="orange-money">Orange Money 🟠</option>
+                </select>
+            </div>
+            <label>Disponibilité des créneaux :</label>
+            <div class="slots-legend">
+                <span><span class="color-dot available"></span> Disponible</span>
+                <span><span class="color-dot pending"></span> En attente</span>
+                <span><span class="color-dot booked"></span> Réservé</span>
+                <span><span class="color-dot blocked"></span> Bloqué</span>
+            </div>
+            <div id="blocked-info" style="display: none; background-color: #fff3cd; color: #856404; padding: 10px 15px; border-radius: 8px; margin: 10px 0 15px 0; font-weight: bold; text-align: center; border-left: 5px solid #dc3545; font-size: 14px;">
+                ⚠️ Les samedis 07, 14, 21 et 28 novembre 2026 de 22h à 23h sont réservés par la Location douanier.
+            </div>
+            <div class="slots-counter"><span id="slots-count">0</span> créneaux disponibles pour cette date</div>
+            <div class="slots-grid" id="slots-container"></div>
+            <div class="summary-box">
+                <h3>Total à payer</h3>
+                <p id="total-price">30.000 FCFA</p>
+            </div>
+            <button type="submit" id="submit-btn" class="btn-attract ripple">Valider la réservation & Payer l'acompte 💳</button>
+        </form>
     </div>
 
-    <form id="reservation-form">
-        <div class="form-group">
-            <label>Nom complet :</label>
-            <input type="text" id="full-name" required placeholder="Votre nom complet">
-        </div>
-        <div class="form-group">
-            <label>Numéro WhatsApp :</label>
-            <input type="tel" id="whatsapp-number" required placeholder="Ex: 7XXXXXXXX">
-        </div>
-        <div class="form-group">
-            <label>Date du match :</label>
-            <input type="date" id="date-match" required>
-        </div>
-        <div class="form-group">
-            <label>Équipe A :</label>
-            <input type="text" id="equipe-a" required placeholder="Nom équipe A">
-        </div>
-        <div class="form-group">
-            <label>Équipe B :</label>
-            <input type="text" id="equipe-b" required placeholder="Nom équipe B">
+    <!-- ═══════ SECTION CLUB FITNESS ═══════ -->
+    <div id="tab-fitness" class="tab-content">
+
+        <div class="fitness-hero">
+            <img src="logo-fitness.jpeg" alt="Club Fitness KBT SPORT" class="fitness-logo">
+            <h2>Club Fitness</h2>
+            <p>Cours de danse collectifs — Tous les jours<br><strong>Ouvert 7j/7</strong></p>
         </div>
 
-        <div class="form-group">
-            <label>Terrain & Durée :</label>
-            <select id="tarif-select" onchange="calculerPrix()">
-                <option value="30000">Terrain complet - 30.000 FCFA</option>
-                <option value="15000">Demi-terrain - 15.000 FCFA</option>
-            </select>
-            <select id="duree" onchange="calculerPrix()" style="margin-top: 10px;">
-                <option value="1">1 heure</option>
-                <option value="2">2 heures</option>
-            </select>
+        <div class="musculation-preview-section">
+            <div class="musculation-preview-header">
+                <span class="musculation-icon">🏋️</span>
+                <h3>Salle de Musculation</h3>
+            </div>
+            <img src="salle-musculation.jpeg" alt="Salle de musculation KBT SPORT" class="musculation-preview">
+            <p class="musculation-desc">Matériel complet disponible sur place</p>
         </div>
 
-        <div class="payment-notice">
-            <h3>💳 Acompte obligatoire</h3>
-            <p>Pour bloquer votre créneau, versez un acompte de <strong>50%</strong> : <span id="deposit-amount">15.000 FCFA</span></p>
-            <p class="payment-warning">⚠️ Sans paiement, le créneau ne sera pas réservé.</p>
+        <div class="rules-section fitness-rules-section">
+            <button type="button" class="rules-toggle" onclick="toggleRulesFitness()">
+                <span>📋 Règlement du Club Fitness</span>
+                <span id="rules-fitness-arrow">▼</span>
+            </button>
+            <div id="rules-fitness-content" class="rules-content">
+                <p class="rules-subtitle">Club Fitness KBT SPORT — Karang Poste</p>
+                <p>Bienvenue au Club Fitness ! Pour que chacun profite au mieux des cours, merci de respecter les règles suivantes :</p>
+                <h3>1. Inscription et Paiement</h3>
+                <ul>
+                    <li><strong>Inscription obligatoire :</strong> 7.500 F pour l'abonnement mensuel, 2.500 F pour les séances à l'unité.</li>
+                    <li><strong>Paiement :</strong> Uniquement via <strong>Wave</strong> (Karang Business Tine & Frère).</li>
+                    <li><strong>Mensualité :</strong> 5.000 F/mois pour les abonnés — à régler avant le 5 de chaque mois.</li>
+                    <li><strong>Entrée à l'unité :</strong> 300 F par séance (réservé aux personnes inscrites).</li>
+                    <li><strong>Non remboursable :</strong> Les frais d'inscription ne sont pas remboursables.</li>
+                </ul>
+                <h3>2. Horaires et Présence</h3>
+                <ul>
+                    <li><strong>Ouverture :</strong> Tous les jours (7j/7).</li>
+                    <li><strong>Présence :</strong> Merci d'arriver 10 minutes avant le début du cours.</li>
+                    <li><strong>Retard :</strong> Au-delà de 15 minutes, l'entrée peut être refusée.</li>
+                </ul>
+                <h3>3. Tenue et Comportement</h3>
+                <ul>
+                    <li><strong>Tenue de sport obligatoire</strong> (chaussures propres et adaptées).</li>
+                    <li><strong>Serviette personnelle</strong> recommandée.</li>
+                    <li><strong>Respect :</strong> Fair-play et bienveillance envers tous les membres.</li>
+                    <li><strong>Téléphone :</strong> En mode silencieux pendant les cours.</li>
+                    <li><span class="danger-highlight">Aucune insulte, discrimination ou violence ne sera tolérée.</span></li>
+                </ul>
+                <h3>4. Salle et Matériel</h3>
+                <ul>
+                    <li><strong>Matériel :</strong> À ranger après usage.</li>
+                    <li><strong>Dégâts :</strong> Tout matériel cassé par négligence sera facturé.</li>
+                    <li><strong>Propreté :</strong> Merci de laisser la salle propre.</li>
+                    <li><strong>Objets personnels :</strong> Sous votre responsabilité — KBT SPORT décline toute responsabilité en cas de perte ou de vol.</li>
+                </ul>
+                <h3>5. Santé et Sécurité</h3>
+                <ul>
+                    <li><strong>Certificat médical</strong> conseillé pour les cours intensifs.</li>
+                    <li><strong>Blessure / malaise :</strong> Prévenez immédiatement le coach.</li>
+                    <li><strong>Hydratation :</strong> Pensez à apporter votre bouteille d'eau.</li>
+                </ul>
+                <h3>6. Annulation et Suspension</h3>
+                <ul>
+                    <li><strong>Absence prolongée :</strong> Prévenez au moins 48h à l'avance.</li>
+                    <li><strong>Non-paiement :</strong> Après 15 jours de retard, l'accès est suspendu.</li>
+                    <li><strong>Exclusion :</strong> Tout manquement grave peut entraîner l'exclusion définitive sans remboursement.</li>
+                </ul>
+                <p class="rules-footer">Le Club Fitness KBT SPORT vous souhaite une excellente séance ! 💃🎵</p>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label>Mode de paiement :</label>
-            <select id="methode-paiement" required>
-                <option value="wave">Wave 🌊 (Karang Business Tine & Frère)</option>
-                <option value="orange-money">Orange Money 🟠</option>
-            </select>
+        <div class="fitness-info-banner">
+            📢 <strong>Nouveau :</strong> Rejoignez le Club Fitness KBT SPORT !
+            Ambiance garantie, coachs pro, musique entraînante 🎵
         </div>
 
-        <label>Disponibilité des créneaux :</label>
+        <h3 class="formules-title">Choisissez votre formule</h3>
 
-        <div class="slots-legend">
-            <span><span class="color-dot available"></span> Disponible</span>
-            <span><span class="color-dot pending"></span> En attente</span>
-            <span><span class="color-dot booked"></span> Réservé</span>
-            <span><span class="color-dot blocked"></span> Bloqué</span>
+        <div class="formules-grid" id="formules-grid">
+            <div class="formule-card" data-formule="abonnement_mensuel" onclick="selectFormule('abonnement_mensuel', this)">
+                <div class="formule-badge">⭐ Populaire</div>
+                <h3>Abonnement mensuel</h3>
+                <div class="formule-price-main">7.500 <span>F</span></div>
+                <p class="formule-subtitle">Frais d'inscription (une fois)</p>
+                <div class="formule-detail-box">
+                    <span class="formule-plus">+</span>
+                    <strong>5.000 F</strong> / mois
+                </div>
+                <p class="formule-desc">Accès illimité aux cours tous les jours</p>
+                <div class="formule-check">✓</div>
+            </div>
+
+            <div class="formule-card" data-formule="seance" onclick="selectFormule('seance', this)">
+                <h3>Séance à l'unité</h3>
+                <div class="formule-price-main">2.500 <span>F</span></div>
+                <p class="formule-subtitle">Frais d'inscription (une fois)</p>
+                <div class="formule-detail-box">
+                    <span class="formule-plus">+</span>
+                    <strong>300 F</strong> / entrée
+                </div>
+                <p class="formule-desc">Idéal pour essayer sans engagement</p>
+                <div class="formule-check">✓</div>
+            </div>
         </div>
 
-        <div id="blocked-info" style="display: none; background-color: #fff3cd; color: #856404; padding: 10px 15px; border-radius: 8px; margin: 10px 0 15px 0; font-weight: bold; text-align: center; border-left: 5px solid #dc3545; font-size: 14px;">
-            ⚠️ Les samedis 07, 14, 21 et 28 novembre 2026 de 22h à 23h sont réservés par la Location douanier.
+        <form id="fitness-form" style="display: none;">
+            <h3 class="formules-title" style="margin-top: 30px;">📝 Inscription</h3>
+
+            <div class="formule-selected-recap" id="formule-recap">
+                <span class="recap-label">Formule choisie :</span>
+                <strong id="recap-formule-nom">—</strong>
+                <span class="recap-price" id="recap-formule-price">—</span>
+            </div>
+
+            <div class="form-group">
+                <label>Nom complet :</label>
+                <input type="text" id="fitness-nom" required placeholder="Votre nom complet">
+            </div>
+            <div class="form-group">
+                <label>Numéro WhatsApp :</label>
+                <input type="tel" id="fitness-tel" required placeholder="Ex: 7XXXXXXXX">
+            </div>
+            <div class="form-group">
+                <label>Date de début :</label>
+                <input type="date" id="fitness-date" required>
+            </div>
+            <div class="form-group">
+                <label>Paiement :</label>
+                <select id="fitness-paiement" disabled>
+                    <option value="wave">Wave 🌊 uniquement</option>
+                </select>
+            </div>
+
+            <div class="payment-notice">
+                <h3>💳 À payer maintenant</h3>
+                <p>Frais d'inscription : <span id="fitness-montant" style="color: var(--primary-color); font-weight: 800; font-size: 1.2rem;">— F</span></p>
+                <p class="payment-warning">⚠️ Paiement via Wave uniquement.</p>
+            </div>
+
+            <div class="summary-box">
+                <h3>Total inscription</h3>
+                <p id="fitness-total-price">— F</p>
+            </div>
+
+            <button type="submit" class="btn-attract ripple">✅ Valider l'inscription & Payer via Wave</button>
+        </form>
+
+        <div class="fitness-horaires">
+            <h4>🕐 Horaires</h4>
+            <div class="horaires-row">
+                <div class="horaire-item">
+                    <span class="horaire-jour">Lundi — Dimanche</span>
+                    <span class="horaire-heure">Ouvert tous les jours</span>
+                </div>
+            </div>
+            <p class="fitness-contact">📞 Infos : <strong>75 641 80 77</strong></p>
         </div>
-
-        <div class="slots-counter"><span id="slots-count">0</span> créneaux disponibles pour cette date</div>
-        <div class="slots-grid" id="slots-container"></div>
-
-        <div class="summary-box">
-            <h3>Total à payer</h3>
-            <p id="total-price">30.000 FCFA</p>
-        </div>
-
-        <button type="submit" id="submit-btn" class="btn-attract ripple">Valider la réservation & Payer l'acompte 💳</button>
-    </form>
+    </div>
 
     <hr class="separator">
 
-    <button id="btn-ouvrir-admin" class="btn-secondary ripple">Espace Administration</button>
+    <!-- ═══════ BOUTONS ADMIN SÉPARÉS ═══════ -->
+    <div class="admin-buttons-row">
+        <button id="btn-ouvrir-admin-terrain" class="btn-secondary ripple">⚽ Admin Terrain</button>
+        <button id="btn-ouvrir-admin-fitness" class="btn-secondary ripple">💃 Admin Fitness</button>
+    </div>
 
-    <div class="admin-panel" id="admin-panel-zone" style="display: none;">
-        <h2>Gestion des réservations</h2>
+    <!-- ═══════ PANNEAU ADMIN TERRAIN ═══════ -->
+    <div class="admin-panel" id="admin-panel-terrain" style="display: none;">
+        <div class="admin-panel-header">
+            <h2>⚽ Gestion du Terrain</h2>
+            <button class="btn-close-admin" onclick="fermerAdminTerrain()" title="Fermer">✕</button>
+        </div>
 
         <div id="admin-stats-container" style="margin-bottom: 25px;">
             <h3 style="color: var(--primary-color); margin-bottom: 15px;">📊 Statistiques</h3>
             <div id="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;"></div>
         </div>
 
-        <div style="margin-bottom: 25px; text-align: center;">
+        <div style="margin-bottom: 25px; text-align: center; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
             <button class="btn-attract ripple" onclick="genererRapportPDF()" style="background: linear-gradient(135deg, #dc3545, #b02a37); color: white; padding: 14px 28px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">
-                📄 Télécharger le rapport PDF du mois
+                📄 Rapport PDF du mois
+            </button>
+            <button class="btn-attract ripple" onclick="exporterReservationsExcel()" style="background: linear-gradient(135deg, #217346, #185C37); color: white; padding: 14px 28px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">
+                📊 Export Excel
             </button>
         </div>
 
@@ -212,20 +414,36 @@
         </div>
     </div>
 
+    <!-- ═══════ PANNEAU ADMIN FITNESS ═══════ -->
+    <div class="admin-panel admin-panel-fitness" id="admin-panel-fitness" style="display: none;">
+        <div class="admin-panel-header">
+            <h2>💃 Gestion du Club Fitness</h2>
+            <button class="btn-close-admin" onclick="fermerAdminFitness()" title="Fermer">✕</button>
+        </div>
+
+        <div id="admin-fitness-stats" style="margin-bottom: 25px;"></div>
+        <div id="admin-fitness-pending-container" style="margin-bottom: 20px;"></div>
+
+        <div id="admin-fitness-membres-container">
+            <h3 style="color: var(--primary-color); margin-bottom: 12px;">👥 Membres du Club Fitness</h3>
+            <div id="admin-fitness-membres-list"></div>
+        </div>
+    </div>
+
     <footer class="kbt-footer">
         <div class="footer-top">
             <div class="footer-col">
                 <img src="logo.jpeg" alt="KBT SPORT" class="footer-logo">
                 <h3>⚽ KBT SPORT</h3>
-                <p>Réservez votre terrain de football en ligne facilement et rapidement.</p>
+                <p>Terrain de football et Club Fitness à Karang Poste.</p>
                 <p class="footer-flag">🇸🇳 Karang Poste</p>
             </div>
             <div class="footer-col">
                 <h4>🔗 Navigation</h4>
                 <ul>
-                    <li><a href="#reservation-form">📅 Réserver un créneau</a></li>
-                    <li><a href="#slots-container">🕐 Voir les créneaux</a></li>
-                    <li><a href="javascript:void(0)" onclick="toggleRules(); document.getElementById('rules-content').classList.add('open');">📋 Règlement intérieur</a></li>
+                    <li><a href="javascript:void(0)" onclick="switchTab('football')">⚽ Football</a></li>
+                    <li><a href="javascript:void(0)" onclick="switchTab('fitness')">💃 Club Fitness</a></li>
+                    <li><a href="javascript:void(0)" onclick="retourChoix()">🏠 Changer d'espace</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -243,7 +461,6 @@
                     <span class="pay-badge">🟠 Orange Money</span>
                 </div>
                 <p class="footer-info">Titulaire : <strong>Karang Business Tine & Frère</strong></p>
-                <p class="footer-info">Acompte 50% obligatoire pour bloquer votre créneau.</p>
             </div>
         </div>
         <div class="footer-dev-card">
@@ -261,8 +478,8 @@
         <div class="footer-hours">
             <h4>🕐 Horaires d'ouverture</h4>
             <div class="hours-grid">
-                <div class="hour-item"><span class="hour-icon">🌅</span><span class="hour-label">Matin</span><span class="hour-value">07h00 — 12h15</span></div>
-                <div class="hour-item"><span class="hour-icon">☀️</span><span class="hour-label">Après-midi</span><span class="hour-value">16h00 — 03h15</span></div>
+                <div class="hour-item"><span class="hour-icon">⚽</span><span class="hour-label">Football</span><span class="hour-value">07h — 03h15</span></div>
+                <div class="hour-item"><span class="hour-icon">💃</span><span class="hour-label">Club Fitness</span><span class="hour-value">7j/7</span></div>
             </div>
         </div>
         <div class="footer-bottom">
@@ -282,9 +499,9 @@
 
 <div id="payment-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: #1A1A1A; border: 2px solid var(--primary-color); border-radius: 16px; max-width: 450px; width: 100%; padding: 30px; text-align: center;">
-        <h2 style="color: var(--primary-color); margin-bottom: 15px;">💳 Paiement de l'acompte</h2>
+        <h2 style="color: var(--primary-color); margin-bottom: 15px;">💳 Paiement</h2>
         <p style="color: #E2E8F0; margin-bottom: 20px;">
-            Envoyez <strong style="color: var(--primary-color); font-size: 1.3rem;" id="modal-montant">15.000 FCFA</strong><br>
+            Envoyez <strong style="color: var(--primary-color); font-size: 1.3rem;" id="modal-montant">— FCFA</strong><br>
             à <strong>Karang Business Tine & Frère</strong>
         </p>
         <div id="modal-step-1">
@@ -292,13 +509,13 @@
                 <p style="color: #A0AEC0; font-size: 0.9rem; margin-bottom: 10px;">Cliquez sur le bouton ci-dessous pour payer :</p>
                 <button class="btn-attract ripple" onclick="ouvrirPaiement()" style="display: inline-block; background: linear-gradient(135deg, #FFCC00, #E6B800); color: #000; padding: 14px 28px; border-radius: 8px; font-weight: bold; font-size: 1rem; border: none; cursor: pointer;">💳 Payer maintenant</button>
             </div>
-            <p style="color: #A0AEC0; font-size: 0.85rem; margin-bottom: 15px;">👆 Cliquez pour ouvrir Wave/Orange Money, puis envoyez le montant.</p>
+            <p style="color: #A0AEC0; font-size: 0.85rem; margin-bottom: 15px;">👆 Cliquez pour ouvrir Wave, puis envoyez le montant.</p>
             <button onclick="fermerModalePaiement()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">Annuler</button>
         </div>
         <div id="modal-step-2" style="display: none;">
             <div style="background: #0D0D0D; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #28a745;">
                 <p style="color: #28a745; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;">✅ Vous avez payé ?</p>
-                <p style="color: #A0AEC0; font-size: 0.9rem;">Cliquez ci-dessous pour confirmer votre réservation.</p>
+                <p style="color: #A0AEC0; font-size: 0.9rem;">Cliquez ci-dessous pour confirmer.</p>
             </div>
             <button class="btn-attract ripple" onclick="confirmerPaiement()" style="width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-bottom: 10px;">✅ Confirmer mon paiement</button>
             <button onclick="retourEtape1()" style="width: 100%; padding: 12px; background: transparent; color: #A0AEC0; border: 2px solid #444; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">← Retour</button>
@@ -310,9 +527,11 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
     document.getElementById('date-match').min = new Date().toISOString().split('T')[0];
+    document.getElementById('fitness-date').min = new Date().toISOString().split('T')[0];
     function toggleRules() {
         const content = document.getElementById('rules-content');
         const arrow = document.getElementById('rules-arrow');
@@ -324,14 +543,25 @@
 <script>
     (function() {
         const splash = document.getElementById('splash-screen');
-        if (!splash) return;
+        const choice = document.getElementById('choice-screen');
+        if (!splash || !choice) return;
+
+        function afficherChoix() {
+            choice.style.display = 'flex';
+        }
+
         const hasSeenSplash = sessionStorage.getItem('kbtSplashSeen');
-        if (hasSeenSplash) { splash.style.display = 'none'; }
-        else {
+        if (hasSeenSplash) {
+            splash.style.display = 'none';
+            afficherChoix();
+        } else {
             sessionStorage.setItem('kbtSplashSeen', 'true');
             setTimeout(() => {
                 splash.classList.add('hide');
-                setTimeout(() => { splash.style.display = 'none'; }, 700);
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    afficherChoix();
+                }, 700);
             }, 2500);
         }
     })();
