@@ -7,10 +7,29 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="splash.css">
     <style>
+      /* Correction pour l'affichage des images */
       img { max-width: 100%; }
-      .terrain-preview, .musculation-preview { display:block; width:100%; height:auto; max-height:460px; object-fit:cover; border-radius:14px; }
-      .splash-logo, .choice-brand-logo, .choice-logo, .brand-logo, .fitness-logo, .footer-logo { max-width:100%; height:auto; object-fit:contain; }
-      img:not([src]), img[src=""] { display:none; }
+      .terrain-preview, .musculation-preview { 
+          display: block; 
+          width: 100%; 
+          height: auto; 
+          max-height: 400px; 
+          object-fit: cover; 
+          border-radius: 14px; 
+          margin: 15px 0;
+      }
+      .splash-logo, .choice-brand-logo, .brand-logo, .footer-logo { 
+          max-width: 100%; 
+          height: auto; 
+          object-fit: contain; 
+      }
+      /* Le logo fitness garde sa forme carrée avec fond blanc */
+      .choice-logo, .fitness-logo {
+          object-fit: contain !important;
+          background-color: #ffffff !important;
+          border-radius: 16px !important;
+          padding: 5px;
+      }
     </style>
 </head>
 <body>
@@ -226,8 +245,7 @@
                 <span class="musculation-icon">🏋️</span>
                 <h3>Salle de Musculation</h3>
             </div>
-            <!-- CORRECTION DU NOM DE L'IMAGE ICI -->
-            <img src="salle1.jpeg" alt="Salle de musculation KBT SPORT" class="musculation-preview">
+            <img src="salle-musculation.jpeg" alt="Salle de musculation KBT SPORT" class="musculation-preview">
             <p class="musculation-desc">Matériel complet disponible sur place</p>
         </div>
 
