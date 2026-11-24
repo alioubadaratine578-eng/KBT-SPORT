@@ -6,6 +6,12 @@
     <title>KBT SPORT - Réservation en ligne</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="splash.css">
+    <style>
+      img { max-width: 100%; }
+      .terrain-preview, .musculation-preview { display:block; width:100%; height:auto; max-height:460px; object-fit:cover; border-radius:14px; }
+      .splash-logo, .choice-brand-logo, .choice-logo, .brand-logo, .fitness-logo, .footer-logo { max-width:100%; height:auto; object-fit:contain; }
+      img:not([src]), img[src=""] { display:none; }
+    </style>
 </head>
 <body>
 
@@ -220,7 +226,8 @@
                 <span class="musculation-icon">🏋️</span>
                 <h3>Salle de Musculation</h3>
             </div>
-            <img src="salle-musculation.jpeg" alt="Salle de musculation KBT SPORT" class="musculation-preview">
+            <!-- CORRECTION DU NOM DE L'IMAGE ICI -->
+            <img src="salle1.jpeg" alt="Salle de musculation KBT SPORT" class="musculation-preview">
             <p class="musculation-desc">Matériel complet disponible sur place</p>
         </div>
 
@@ -530,8 +537,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
-    document.getElementById('date-match').min = new Date().toISOString().split('T')[0];
-    document.getElementById('fitness-date').min = new Date().toISOString().split('T')[0];
+    document.getElementById('date-match').min = (function(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')})();
+    document.getElementById('fitness-date').min = (function(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')})();
     function toggleRules() {
         const content = document.getElementById('rules-content');
         const arrow = document.getElementById('rules-arrow');

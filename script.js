@@ -2,7 +2,7 @@
 // KBT SPORT - Firebase Configuration
 // ============================================
 const firebaseConfig = {
-    apiKey: "AIzaSyDBXl3OI8BKJe6gANQmC5Q_Wy8eDBcmmlQ",
+    apiKey: "AI4SyDBXl3OI8BKJe6gANQmC5Q_Wy8eDBcmmlQ",
     authDomain: "kbt-sport.firebaseapp.com",
     projectId: "kbt-sport",
     storageBucket: "kbt-sport.firebasestorage.app",
@@ -19,12 +19,11 @@ const database = firebase.database();
 // ============================================
 const WAVE_LINK = "https://pay.wave.com/m/M_sn_BGrpfVLX6coi/c/sn/";
 const OM_LINK = "tel:%23144%2339%23619506%23";
-const ADMIN_PASSWORD_TERRAIN = "KBT2026";
-const ADMIN_PASSWORD_FITNESS = "KBTFIT2026";
 const VALIDATION_DELAY_MS = 30 * 60 * 1000;
 
-const TELEGRAM_BOT_TOKEN = "8653735403:AAHujm8OSWpiYizyBgcKdI50uRAGZADNoD8";
-const TELEGRAM_CHAT_ID = "-5394160556";
+// CODES ADMIN
+const ADMIN_PASSWORD_TERRAIN = "KBT2026";
+const ADMIN_PASSWORD_FITNESS = "KBTFIT2026";
 
 // ============================================
 // CRÉNEAUX BLOQUÉS
@@ -115,8 +114,12 @@ function showToast(message, type = 'success') {
     if (!container) return;
     const icons = { success: '✅', error: '❌', info: 'ℹ️' };
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+    toast.className = `toast ${icons[type] ? type : 'info'}`;
+    const icon = document.createElement('span');
+    icon.textContent = icons[type] || icons.info;
+    const text = document.createElement('span');
+    text.textContent = String(message);
+    toast.append(icon, text);
     container.appendChild(toast);
     setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 300); }, 4000);
 }
@@ -132,24 +135,11 @@ function hideLoader() {
     if (l) l.classList.add('hidden');
 }
 
-async function envoyerNotificationTelegram(reservation) {
-    try {
-        const message =
-            `🔔 *NOUVELLE RÉSERVATION KBT SPORT*\n\n` +
-            `👤 *Client :* ${reservation.name}\n` +
-            `📞 *Téléphone :* ${reservation.phone}\n` +
-            `📅 *Date :* ${reservation.date}\n` +
-            `🕐 *Créneau :* ${reservation.slot}\n` +
-            `⚽ *Match :* ${reservation.equipeA} vs ${reservation.equipeB}\n` +
-            `💰 *Acompte :* ${new Intl.NumberFormat('fr-FR').format(reservation.acompte)} FCFA\n` +
-            `💳 *Paiement :* ${reservation.paiement === 'wave' ? 'Wave 🌊' : 'Orange Money 🟠'}\n\n` +
-            `✅ *À VALIDER dans l'admin !*`;
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'Markdown' })
-        });
-    } catch (err) { console.error("❌ Erreur Telegram:", err); }
+function dateLocaleISO(date = new Date()) {
+    const annee = date.getFullYear();
+    const mois = String(date.getMonth() + 1).padStart(2, '0');
+    const jour = String(date.getDate()).padStart(2, '0');
+    return `${annee}-${mois}-${jour}`;
 }
 
 function getCreneauxPending(dateStr) {
@@ -218,6 +208,7 @@ window.calculerPrix = () => {
 // AVIS CLIENTS
 // ============================================
 window.setNote = function(n) {
+    n = Math.max(1, Math.min(5, Number(n) || 5));
     noteAvisActuelle = n;
     document.querySelectorAll('#stars-container span').forEach((span, i) => {
         if (i < n) span.classList.add('active');
@@ -457,21 +448,6 @@ window.confirmerPaiement = async function () {
             confirmedAt: firebase.database.ServerValue.TIMESTAMP
         });
 
-        try {
-            const msg = `💃 *NOUVELLE INSCRIPTION CLUB FITNESS*\n\n` +
-                `👤 *Nom :* ${ins.nom}\n` +
-                `📞 *Téléphone :* ${ins.telephone}\n` +
-                `🎫 *Formule :* ${ins.formuleNom}\n` +
-                `💰 *Inscription :* ${new Intl.NumberFormat('fr-FR').format(ins.montantInscription)} FCFA\n` +
-                `📅 *Début :* ${ins.dateDebut}\n\n` +
-                `✅ *À VALIDER dans l'admin !*`;
-            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'Markdown' })
-            });
-        } catch (err) { console.error(err); }
-
         hideLoader();
         document.getElementById('payment-modal').style.display = 'none';
         document.getElementById('modal-step-1').style.display = 'block';
@@ -518,7 +494,6 @@ window.confirmerPaiement = async function () {
             confirmedAt: firebase.database.ServerValue.TIMESTAMP
         });
         await database.ref(`kbt_reservations_temp/${res.id}`).remove();
-        await envoyerNotificationTelegram(res);
 
         hideLoader();
         document.getElementById('payment-modal').style.display = 'none';
@@ -539,7 +514,7 @@ window.confirmerPaiement = async function () {
 document.addEventListener('DOMContentLoaded', () => {
     const dateInput = document.getElementById('date-match');
     if (dateInput) {
-        const today = new Date().toISOString().split('T')[0];
+        const today = dateLocaleISO();
         dateInput.min = today;
         dateInput.value = today;
     }
@@ -693,6 +668,10 @@ function initialiserApplication() {
             }
 
             const dateSelectionnee = dateInput.value;
+            if (!dateSelectionnee || dateSelectionnee < dateLocaleISO()) {
+                showToast("Choisissez une date valide à partir d'aujourd'hui.", "error");
+                return;
+            }
             if (isSlotBlocked(dateSelectionnee, selectedSlot)) {
                 return showToast("Ce créneau est réservé (douaniers).", "error");
             }
@@ -719,6 +698,10 @@ function initialiserApplication() {
 
             const total = tarifValue * dureeValue;
             const acompte = Math.round(total / 2);
+            if (!nameInput.value.trim() || !phoneInput.value.trim() || !equipeAInput.value.trim() || !equipeBInput.value.trim() || !paiementSelect) {
+                showToast("Veuillez remplir correctement tous les champs.", "error");
+                return;
+            }
             const tempId = 'temp_' + Date.now();
 
             const reservationData = {
@@ -783,7 +766,7 @@ async function nettoyerReservationsExpirees() {
 }
 
 // ============================================
-// ADMIN TERRAIN
+// ADMIN TERRAIN (Code Simple)
 // ============================================
 function initAdminTerrain() {
     const btn = document.getElementById('btn-ouvrir-admin-terrain');
@@ -810,7 +793,7 @@ window.fermerAdminTerrain = function () {
 };
 
 // ============================================
-// ADMIN FITNESS
+// ADMIN FITNESS (Code Simple)
 // ============================================
 function initAdminFitness() {
     const btn = document.getElementById('btn-ouvrir-admin-fitness');
@@ -850,7 +833,7 @@ function renderStats() {
     const now = new Date();
     const moisActuel = now.getMonth();
     const anneeActuelle = now.getFullYear();
-    const aujourdhui = now.toISOString().split('T')[0];
+    const aujourdhui = dateLocaleISO();
     const validees = reservationsAdmin.filter(r => r.statut === 'valide');
 
     const revenusMois = validees
@@ -1078,7 +1061,7 @@ window.exporterReservationsExcel = function () {
         XLSX.utils.book_append_sheet(wb, ws, nomMois.substring(0, 31));
     });
 
-    const dateStr = new Date().toISOString().split('T')[0];
+    const dateStr = dateLocaleISO();
     XLSX.writeFile(wb, `KBT-SPORT-Reservations-${dateStr}.xlsx`);
     const nbMois = Object.keys(parMois).length;
     showToast(`✅ ${toutes.length} réservation(s) exportée(s) sur ${nbMois} mois !`, 'success');
